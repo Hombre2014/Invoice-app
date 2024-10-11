@@ -1,9 +1,9 @@
 export default function Home() {
   return (
-    <main>
-      <h1>Invoicepedia</h1>
+    <main className="max-w-5xl mx-auto">
+      <h1 className="text-5xk font-bold">Invoicepedia</h1>
       <p>
-        <a href="">Sign In</a>
+        <a href="/dashboard">Sign In</a>
       </p>
     </main>
   );
