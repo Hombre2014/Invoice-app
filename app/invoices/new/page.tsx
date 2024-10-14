@@ -1,14 +1,28 @@
-import { sql } from 'drizzle-orm';
+'use client';
 
-import { db } from '@/db';
+import { SyntheticEvent, useState, startTransition } from 'react';
+
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { createInvoice } from '@/app/actions';
 import { Textarea } from '@/components/ui/textarea';
+import SubmitButton from '@/components/SubmitButton';
 
-export default async function NewInvoice() {
-  const results = await db.execute(sql`SELECT current_database()`);
-  console.log(results);
+export default function NewInvoice() {
+  const [state, setState] = useState('ready');
+
+  async function handleOnSubmit(event: SyntheticEvent) {
+    event.preventDefault();
+    if (state === 'pending') return;
+    setState('pending');
+    const target = event.target as HTMLFormElement;
+
+    startTransition(async () => {
+      const formData = new FormData(target);
+      await createInvoice(formData);
+      console.log('submitting form');
+    });
+  }
 
   return (
     <main className="flex flex-col justify-center gap-6 max-w-5xl mx-auto my-12">
@@ -16,9 +30,11 @@ export default async function NewInvoice() {
         <h1 className="text-3xl font-semibold">Create a New Invoice</h1>
       </div>
 
-      {JSON.stringify(results)}
-
-      <form className="grid gap-4 max-w-xs">
+      <form
+        action={createInvoice}
+        onSubmit={handleOnSubmit}
+        className="grid gap-4 max-w-xs"
+      >
         <div>
           <Label className="block mb-2 font-semibold text-small" htmlFor="name">
             Billing Name
@@ -56,9 +72,7 @@ export default async function NewInvoice() {
           <Textarea name="description" id="description"></Textarea>
         </div>
 
-        <Button type="submit" className="w-full font-semibold">
-          Submit
-        </Button>
+        <SubmitButton />
       </form>
     </main>
   );
