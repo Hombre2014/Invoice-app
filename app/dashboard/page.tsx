@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 
 export default async function Home() {
   const results = await db.select().from(Invoices);
@@ -70,7 +71,17 @@ export default async function Home() {
                 </TableCell>
                 <TableCell className="text-center p-0">
                   <Link href={`/invoices/${result.id}`} className="block p-4">
-                    <Badge className="rounded-full">{result.status}</Badge>
+                    <Badge
+                      className={cn(
+                        'rounded-full capitalize',
+                        result.status === 'open' && 'bg-blue-500',
+                        result.status === 'paid' && 'bg-green-500',
+                        result.status === 'void' && 'bg-gray-500',
+                        result.status === 'uncollectible' && 'bg-red-500'
+                      )}
+                    >
+                      {result.status}
+                    </Badge>
                   </Link>
                 </TableCell>
                 <TableCell className="text-right">
