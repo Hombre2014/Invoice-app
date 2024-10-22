@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-// import { SignedOut, SignInButton } from '@clerk/nextjs';
 
 export default function Home() {
   return (
