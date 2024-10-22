@@ -6,9 +6,9 @@ import { SyntheticEvent, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { createInvoice } from '@/app/actions';
+import Container from '@/components/Container';
 import { Textarea } from '@/components/ui/textarea';
 import SubmitButton from '@/components/SubmitButton';
-import Container from '@/components/Container';
 
 export default function NewInvoice() {
   const [state, setState] = useState('ready');
