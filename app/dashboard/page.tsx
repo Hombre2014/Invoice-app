@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { CirclePlus } from 'lucide-react';
 
 import { db } from '@/db';
+import { cn } from '@/lib/utils';
 import { Invoices } from '@/db/schema';
 import { Badge } from '@/components/ui/badge';
 import Container from '@/components/Container';
@@ -15,7 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 
 export default async function Home() {
   const results = await db.select().from(Invoices);
