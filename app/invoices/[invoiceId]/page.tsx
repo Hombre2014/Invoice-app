@@ -1,5 +1,6 @@
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
+import { auth } from '@clerk/nextjs/server';
 
 import { db } from '@/db';
 import { cn } from '@/lib/utils';
@@ -11,7 +12,12 @@ export default async function InvoicePage({
 }: {
   params: { invoiceId: string };
 }) {
+  const { userId } = auth();
   const invoiceId = parseInt(params.invoiceId);
+
+  if (!userId) {
+    return;
+  }
 
   if (isNaN(invoiceId)) {
     throw new Error('Invalid invoice ID');
@@ -20,7 +26,7 @@ export default async function InvoicePage({
   const [result] = await db
     .select()
     .from(Invoices)
-    .where(eq(Invoices.id, invoiceId))
+    .where(and(eq(Invoices.userId, userId), eq(Invoices.id, invoiceId)))
     .limit(1);
 
   if (!result) {
@@ -48,9 +54,7 @@ export default async function InvoicePage({
       </div>
 
       <p className="text-3xl mb-3">${(result.value / 100).toFixed(2)}</p>
-
       <p className="text-lg mb-8">{result.description}</p>
-
       <h2 className="font-bold text-lg bm-4">Billing Details</h2>
 
       <ul className="grid gap-2">

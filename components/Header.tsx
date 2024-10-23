@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
 import Container from './Container';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ const Header = () => {
           </p>
           <div>
             <SignedOut>
-              <Link href="/dashboard">Sign In</Link>
+              <SignInButton />
             </SignedOut>
             <SignedIn>
               <UserButton />
