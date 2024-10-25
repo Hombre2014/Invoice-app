@@ -5,10 +5,10 @@ import { auth } from '@clerk/nextjs/server';
 
 import { db } from '@/db';
 import { cn } from '@/lib/utils';
-import { Invoices } from '@/db/schema';
 import { Badge } from '@/components/ui/badge';
 import Container from '@/components/Container';
 import { Button } from '@/components/ui/button';
+import { Customers, Invoices } from '@/db/schema';
 import {
   Table,
   TableBody,
@@ -29,7 +29,15 @@ export default async function Home() {
   const results = await db
     .select()
     .from(Invoices)
+    .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
     .where(eq(Invoices.userId, userId));
+
+  const invoices = results?.map(({ invoices, customers }) => {
+    return {
+      ...invoices,
+      customer: customers,
+    };
+  });
 
   return (
     <main className="h-full">
@@ -57,7 +65,7 @@ export default async function Home() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {results.map((result) => {
+            {invoices.map((result) => {
               return (
                 <TableRow key={result.id}>
                   <TableCell className="font-medium text-left p-0">
@@ -73,12 +81,12 @@ export default async function Home() {
                       href={`/invoices/${result.id}`}
                       className="font-semibold block p-4"
                     >
-                      Philip J. Fry
+                      {result.customer.name}
                     </Link>
                   </TableCell>
                   <TableCell className="text-left p-0">
                     <Link href={`/invoices/${result.id}`} className="block p-4">
-                      philip@fry.com
+                      {result.customer.email}
                     </Link>
                   </TableCell>
                   <TableCell className="text-center p-0">

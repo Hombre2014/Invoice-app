@@ -4,7 +4,7 @@ import { auth } from '@clerk/nextjs/server';
 
 import { db } from '@/db';
 import Invoice from './Invoice';
-import { Invoices } from '@/db/schema';
+import { Customers, Invoices } from '@/db/schema';
 
 export default async function InvoicePage({
   params,
@@ -25,12 +25,20 @@ export default async function InvoicePage({
   const [result] = await db
     .select()
     .from(Invoices)
+    .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
     .where(and(eq(Invoices.userId, userId), eq(Invoices.id, invoiceId)))
     .limit(1);
+
+  console.log('result', result);
 
   if (!result) {
     return notFound();
   }
 
-  return <Invoice invoice={result} />;
+  const invoice = {
+    ...result.invoices,
+    customer: result.customers,
+  };
+
+  return <Invoice invoice={invoice} />;
 }
