@@ -5,20 +5,38 @@ import { db } from '@/db';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import Container from '@/components/Container';
-import { Customers, Invoices } from '@/db/schema';
 import { Button } from '@/components/ui/button';
 import { Check, CreditCard } from 'lucide-react';
+import { Customers, Invoices } from '@/db/schema';
+import { createPayment, updateStatusAction } from '@/app/actions';
+
+interface PaymentPageProps {
+  params: { invoiceId: string };
+  searchParams: { status: string };
+}
 
 export default async function PaymentPage({
   params,
-}: {
-  params: { invoiceId: string };
-}) {
+  searchParams,
+}: PaymentPageProps) {
   const invoiceId = parseInt(params.invoiceId);
+
+  const isSuccess = searchParams.status === 'success';
+  const isCanceled = searchParams.status === 'canceled';
+
+  console.log('isSuccess', isSuccess);
+  console.log('isCanceled', isCanceled);
 
   if (isNaN(invoiceId)) {
     throw new Error('Invalid invoice ID');
   }
+
+  // if (isSuccess) {
+  //   const formData = new FormData();
+  //   formData.append('id', String(invoiceId));
+  //   formData.append('status', 'paid');
+  //   await updateStatusAction(formData);
+  // }
 
   const [result] = await db
     .select({
@@ -73,7 +91,8 @@ export default async function PaymentPage({
           <div>
             <h2 className="text-xl font-bold mb-4">Manage Invoice</h2>
             {invoice.status === 'open' && (
-              <form action="">
+              <form action={createPayment}>
+                <input type="hidden" name="id" value={invoice.id} />
                 <Button className="flex gap-2 bg-green-700 font-bold">
                   <CreditCard className="w-5 h-auto" />
                   Pay invoice

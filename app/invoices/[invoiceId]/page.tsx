@@ -12,22 +12,37 @@ export default async function InvoicePage({
   params: { invoiceId: string };
 }) {
   const { userId } = auth();
-  const invoiceId = parseInt(params.invoiceId);
+  // const invoiceId = parseInt(params.invoiceId);
+
+  // if (!userId) return;
+
+  // if (isNaN(invoiceId)) {
+  //   throw new Error('Invalid invoice ID');
+  // }
 
   if (!userId) return;
 
-  if (isNaN(invoiceId)) {
-    throw new Error('Invalid invoice ID');
+  const invoiceId = Number.parseInt(params.invoiceId);
+
+  if (Number.isNaN(invoiceId)) {
+    throw new Error('Invalid Invoice ID');
   }
 
-  const [result] = await db
+  // const [result] = await db
+  //   .select()
+  //   .from(Invoices)
+  //   .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
+  //   .where(and(eq(Invoices.userId, userId), eq(Invoices.id, invoiceId)))
+  //   .limit(1);
+
+  const [result]: Array<{
+    invoices: typeof Invoices.$inferSelect;
+    customers: typeof Customers.$inferSelect;
+  }> = await db
     .select()
     .from(Invoices)
     .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
-    .where(and(eq(Invoices.userId, userId), eq(Invoices.id, invoiceId)))
     .limit(1);
-
-  console.log('result', result);
 
   if (!result) {
     return notFound();
