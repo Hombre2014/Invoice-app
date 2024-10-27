@@ -1,5 +1,6 @@
 'use server';
 
+import Stripe from 'stripe';
 import { and, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
@@ -7,6 +8,8 @@ import { revalidatePath } from 'next/cache';
 
 import { db } from '@/db';
 import { Customers, Invoices, Status } from '@/db/schema';
+
+const stripe = new Stripe(String(process.env.STRIPE_API_SECRET));
 
 export async function createInvoice(formData: FormData) {
   const { userId } = auth();
@@ -62,7 +65,7 @@ export async function updateStatusAction(formData: FormData) {
     .set({ status })
     .where(and(eq(Invoices.userId, userId), eq(Invoices.id, parseInt(id))));
 
-  revalidatePath(`/invoices/${id}`), 'page';
+  revalidatePath(`/invoices/${id}`, 'page');
 }
 
 export async function deleteInvoiceAction(formData: FormData) {
