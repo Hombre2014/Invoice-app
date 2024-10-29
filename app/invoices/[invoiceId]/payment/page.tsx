@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { db } from '@/db';
@@ -10,33 +11,58 @@ import { Check, CreditCard } from 'lucide-react';
 import { Customers, Invoices } from '@/db/schema';
 import { createPayment, updateStatusAction } from '@/app/actions';
 
-interface PaymentPageProps {
-  params: { invoiceId: string };
-  searchParams: { status: string };
-}
+// interface PaymentPageProps {
+//   params: { invoiceId: string };
+//   searchParams: { status: string };
+// }
 
 export default async function PaymentPage({
   params,
-  searchParams,
-}: PaymentPageProps) {
+}: // searchParams,
+{
+  params: { invoiceId: string };
+}) {
   const invoiceId = parseInt(params.invoiceId);
 
-  const isSuccess = searchParams.status === 'success';
-  const isCanceled = searchParams.status === 'canceled';
+  async function getHeaderList() {
+    try {
+      const headerList = await headers();
+      const entries = Array.from(headerList.entries());
+      const specificHeader = entries[entries.length - 2]; // Get the element with index 25
+      const url = specificHeader[1]; // Get the second element (URL)
 
-  console.log('isSuccess', isSuccess);
-  console.log('isCanceled', isCanceled);
+      // Create a URL object
+      const parsedUrl = new URL(url);
+      // Get the value of the 'status' parameter
+      const status = parsedUrl.searchParams.get('status');
+
+      return status; // Now you can return or use the status as needed
+    } catch (error) {
+      console.error('Error fetching headers:', error);
+      return null; // Handle error case
+    }
+  }
+
+  const status = await getHeaderList();
+  const isCanceled = status === 'canceled';
+  const isSuccess = status === 'success';
 
   if (isNaN(invoiceId)) {
     throw new Error('Invalid invoice ID');
   }
 
-  // if (isSuccess) {
-  //   const formData = new FormData();
-  //   formData.append('id', String(invoiceId));
-  //   formData.append('status', 'paid');
-  //   await updateStatusAction(formData);
-  // }
+  if (isSuccess) {
+    const formData = new FormData();
+    formData.append('id', String(invoiceId));
+    formData.append('status', 'paid');
+    await updateStatusAction(formData);
+  } else if (isCanceled) {
+    // Do I really want to void the invoice if user clicks back?
+    const formData = new FormData();
+    formData.append('id', String(invoiceId));
+    formData.append('status', 'void');
+    await updateStatusAction(formData);
+  }
 
   const [result] = await db
     .select({
