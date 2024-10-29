@@ -5,7 +5,6 @@ import { and, eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
-import { revalidatePath } from 'next/cache';
 
 import { db } from '@/db';
 import { Customers, Invoices, Status } from '@/db/schema';
@@ -19,8 +18,8 @@ export async function createInvoice(formData: FormData) {
 
   const value = Math.floor(parseFloat(String(formData.get('value'))) * 100);
   const description = formData.get('description') as string;
-  const name = formData.get('name') as string;
   const email = formData.get('email') as string;
+  const name = formData.get('name') as string;
 
   const [customer] = await db
     .insert(Customers)
@@ -66,7 +65,8 @@ export async function updateStatusAction(formData: FormData) {
     throw new Error('Invalid Invoice id');
   }
 
-  revalidatePath(`/invoices/${id}`, 'page');
+  // revalidatePath(`/invoices/${id}`, 'page'); // When uncommented, the following error will be thrown
+  // Error: "Route /invoices/[invoiceId]/payment used "revalidatePath /invoices/107" during render which is unsupported. To ensure revalidation is performed consistently it must //always happen outside of renders and cached functions. See more info here: https://nextjs.org/docs/app/building-your-application/rendering/static-and-dynamic#dynamic-rendering" occurred while processing your request
 }
 
 export async function deleteInvoiceAction(formData: FormData) {

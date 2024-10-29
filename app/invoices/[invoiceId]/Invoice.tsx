@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useOptimistic } from 'react';
+import { useState } from 'react';
 import { ChevronDown, CreditCard, Ellipsis, Trash2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -34,16 +34,18 @@ interface InvoiceProps {
 }
 
 export default function Invoice({ invoice }: InvoiceProps) {
-  const [currentStatus, setCurrentStatus] = useOptimistic(
-    invoice.status,
-    (state, newStatus) => {
-      return String(newStatus);
-    }
-  );
+  // const [currentStatus, setCurrentStatus] = useOptimistic(
+  //   invoice.status,
+  //   (state, newStatus) => {
+  //     return String(newStatus);
+  //   }
+  // );
+
+  const [currentStatus, setCurrentStatus] = useState(invoice.status);
 
   async function handleOnUpdateStatus(formData: FormData) {
     const originalStatus = currentStatus;
-    setCurrentStatus(formData.get('status'));
+    setCurrentStatus(formData.get('status')! as string);
 
     try {
       await updateStatusAction(formData);
