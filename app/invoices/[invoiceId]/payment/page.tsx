@@ -1,4 +1,5 @@
-import { eq } from 'drizzle-orm';
+import Stripe from 'stripe';
+import { eq, is } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
@@ -11,6 +12,9 @@ import { Check, CreditCard } from 'lucide-react';
 import { Customers, Invoices } from '@/db/schema';
 import { createPayment, updateStatusAction } from '@/app/actions';
 
+const stripe = new Stripe(String(process.env.STRIPE_API_SECRET));
+
+// Original code from the video course:
 // interface PaymentPageProps {
 //   params: { invoiceId: string };
 //   searchParams: { status: string };
@@ -18,8 +22,7 @@ import { createPayment, updateStatusAction } from '@/app/actions';
 
 export default async function PaymentPage({
   params,
-}: // searchParams,
-{
+}: {
   params: { invoiceId: string };
 }) {
   const invoiceId = parseInt(params.invoiceId);
@@ -30,38 +33,46 @@ export default async function PaymentPage({
       const entries = Array.from(headerList.entries());
       const specificHeader = entries[entries.length - 2]; // Get the element with index 25
       const url = specificHeader[1]; // Get the second element (URL)
+      // Trim the first 66 characters from the session_id FIRST 66 CHARACTERS!!!
+
+      const session_id = url.split('session_id=')[1].substring(0, 66);
 
       // Create a URL object
       const parsedUrl = new URL(url);
       // Get the value of the 'status' parameter
       const status = parsedUrl.searchParams.get('status');
 
-      return status; // Now you can return or use the status as needed
+      return {
+        status,
+        session_id,
+      }; // Now you can return or use the status as needed
     } catch (error) {
       console.error('Error fetching headers:', error);
       return null; // Handle error case
     }
   }
 
-  const status = await getHeaderList();
-  const isCanceled = status === 'canceled';
+  const { status, session_id } = (await getHeaderList()) || {};
+  const isCanceled = session_id && status === 'canceled';
   const isSuccess = status === 'success';
+  let isError = isSuccess && !session_id;
 
   if (isNaN(invoiceId)) {
     throw new Error('Invalid invoice ID');
   }
 
-  if (isSuccess) {
-    const formData = new FormData();
-    formData.append('id', String(invoiceId));
-    formData.append('status', 'paid');
-    await updateStatusAction(formData);
-  } else if (isCanceled) {
-    // Do I really want to void the invoice if user clicks back?
-    const formData = new FormData();
-    formData.append('id', String(invoiceId));
-    formData.append('status', 'void');
-    await updateStatusAction(formData);
+  if (isSuccess && session_id) {
+    const { payment_status } = await stripe.checkout.sessions.retrieve(
+      session_id!
+    );
+    if (payment_status !== 'paid') {
+      isError = true;
+    } else {
+      const formData = new FormData();
+      formData.append('id', String(invoiceId));
+      formData.append('status', 'paid');
+      await updateStatusAction(formData);
+    }
   }
 
   const [result] = await db
@@ -92,6 +103,18 @@ export default async function PaymentPage({
   return (
     <main className="w-full h-full">
       <Container>
+        {isError && (
+          <div className="bg-red-100 text-red-800 rounded-lg p-4 mx-auto my-8">
+            <p>
+              There was an error processing your payment. Please, try again.
+            </p>
+          </div>
+        )}
+        {isCanceled && (
+          <div className="bg-yellow-100 text-yellow-800 rounded-lg p-4 mx-auto my-8">
+            <p>Payment was canceled. Please, try again.</p>
+          </div>
+        )}
         <div className="grid grid-cols-2">
           <div>
             <div className="flex justify-between mb-8">
