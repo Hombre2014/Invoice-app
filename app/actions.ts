@@ -5,10 +5,13 @@ import { and, eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
+import { Resend } from 'resend';
 
 import { db } from '@/db';
 import { Customers, Invoices, Status } from '@/db/schema';
+import { InvoiceCreatedEmail } from '@/emails/invoice-created';
 
+const resend = new Resend(process.env.RESEND_API_KEY);
 const stripe = new Stripe(String(process.env.STRIPE_API_SECRET));
 
 export async function createInvoice(formData: FormData) {
@@ -44,6 +47,13 @@ export async function createInvoice(formData: FormData) {
     .returning({
       id: Invoices.id,
     });
+
+  const { data, error } = await resend.emails.send({
+    from: 'Axebit <mytools@my-tools.ai>',
+    to: [email],
+    subject: 'You have a new invoice!',
+    react: InvoiceCreatedEmail({ invoiceId: results[0].id }),
+  });
 
   redirect(`/invoices/${results[0].id}`);
 }
