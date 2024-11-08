@@ -30,13 +30,13 @@ export const InvoiceCreatedEmail = ({
     <Preview>Your login code for Linear</Preview>
     <Body style={main}>
       <Container style={container}>
-        {/* <Img
-          src={`${baseUrl}/static/linear-logo.png`}
+        <Img
+          src={`${baseUrl}/pngegg.png`}
           width="42"
           height="42"
           alt="Linear"
           style={logo}
-        /> */}
+        />
         <Heading style={heading}>New Invoice #{invoiceId}</Heading>
         <Section style={buttonContainer}>
           <Button
@@ -47,7 +47,6 @@ export const InvoiceCreatedEmail = ({
           </Button>
         </Section>
         <Text style={paragraph}>You have a new invoice from Axebit.</Text>
-        {/* <code style={code}>{validationCode}</code> */}
         <Hr style={hr} />
         <Link href="https://axebit.app" style={reportLink}>
           Axebit
@@ -121,15 +120,4 @@ const reportLink = {
 const hr = {
   borderColor: '#dfe1e4',
   margin: '42px 0 26px',
-};
-
-const code = {
-  fontFamily: 'monospace',
-  fontWeight: '700',
-  padding: '1px 4px',
-  backgroundColor: '#dfe1e4',
-  letterSpacing: '-0.3px',
-  fontSize: '21px',
-  borderRadius: '4px',
-  color: '#3c4149',
 };
