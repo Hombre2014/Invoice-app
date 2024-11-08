@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { eq, is } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
@@ -33,8 +33,8 @@ export default async function PaymentPage({
       const entries = Array.from(headerList.entries());
       const specificHeader = entries[entries.length - 2]; // Get the element with index 25
       const url = specificHeader[1]; // Get the second element (URL)
-      // Trim the first 66 characters from the session_id FIRST 66 CHARACTERS!!!
 
+      // Trim the first 66 characters from the session_id FIRST 66 CHARACTERS!!!
       const session_id = url.split('session_id=')[1].substring(0, 66);
 
       // Create a URL object
@@ -45,7 +45,7 @@ export default async function PaymentPage({
       return {
         status,
         session_id,
-      }; // Now you can return or use the status as needed
+      }; // Now you can return or use the status and session_id
     } catch (error) {
       console.error('Error fetching headers:', error);
       return null; // Handle error case
