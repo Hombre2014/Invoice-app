@@ -1,11 +1,12 @@
 'use server';
 
 import Stripe from 'stripe';
+import { Resend } from 'resend';
 import { and, eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
-import { Resend } from 'resend';
+import { revalidatePath } from 'next/cache';
 
 import { db } from '@/db';
 import { Customers, Invoices, Status } from '@/db/schema';

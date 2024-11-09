@@ -34,13 +34,6 @@ interface InvoiceProps {
 }
 
 export default function Invoice({ invoice }: InvoiceProps) {
-  // const [currentStatus, setCurrentStatus] = useOptimistic(
-  //   invoice.status,
-  //   (state, newStatus) => {
-  //     return String(newStatus);
-  //   }
-  // );
-
   const [currentStatus, setCurrentStatus] = useState(invoice.status);
 
   async function handleOnUpdateStatus(formData: FormData) {

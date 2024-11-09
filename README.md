@@ -1,38 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invoicepedia
+
+> An invoice app - created, update and send invoices to your customers.
+
+## Built With
+
+- Major languages: TypeScript
+- Framework: Next.js
+- Database: Xata.io
+- Tools used: Clerk, Resend, React-email-template, Stripe
+- Styling: TailwindCSS, shadcn/ui
+
+## Screenshots
+
+![Invoices page](/public/Invoicedia.png)
+
+## Live Link
+
+You can view the current deployment by clicking the link bellow:
+
+[Live site](https://invoicepedia.vercel.app/)
+
+## Deployment
+
+Deploy your project with [Vercel](https://vercel.com/)
 
 ## Getting Started
 
-First, run the development server:
+To get a local copy up and running follow these simple example steps.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Clone the project to your local machine using `git clone https://github.com/Hombre2014/invoice-app.git`
+- `cd invoice-app` into the project directory
+- Run `npm install` to install the necessary packages
+- have a look at the `.env.example` file and create a `.env.local` file with the necessary environment variables
+- Run `npm run dev` to start the development server
+- Open your browser and go to `http://localhost:3000/`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Author
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+👤 **Yuriy Chamkoriyski**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- GitHub: [@Hombre2014](https://github.com/Hombre2014)
+- Twitter: [@Chamkoriyski](https://twitter.com/Chamkoriyski)
+- LinkedIn: [axebit](https://linkedin.com/in/axebit)
 
-## Learn More
+## 🤝 Contributing
 
-To learn more about Next.js, take a look at the following resources:
+Contributions, issues, and feature requests are welcome!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Feel free to check the [issues page](https://github.com/Hombre2014/carepulse/issues).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Show your support
 
-## Deploy on Vercel
+Give a ⭐️ if you like this project!
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Acknowledgments
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Thanks to Colby Fayock for the inspirational [video](https://www.youtube.com/watch?v=Mcw8Mp8PYUE).
 
-Attribution: icon <a href="https://www.flaticon.com/free-icons/invoice" title="invoice icons">Invoice icons created by Smashicons - Flaticon</a>
+## 📝 License
+
+This project is [MIT](./license.md) licensed.

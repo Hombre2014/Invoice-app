@@ -8,12 +8,6 @@ const isPublic = createRouteMatcher([
   '/invoices/(.*)/payment',
 ]);
 
-// const isProtected = createRouteMatcher([
-//   '/dashboard',
-//   '/invoices/:invoiceId',
-//   '/invoices/new',
-// ]);
-
 export default clerkMiddleware((auth, request) => {
   const headers = new Headers(request.headers);
   headers.set('x-current-path', request.nextUrl.pathname);
