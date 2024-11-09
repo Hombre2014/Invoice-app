@@ -14,12 +14,6 @@ import { createPayment, updateStatusAction } from '@/app/actions';
 
 const stripe = new Stripe(String(process.env.STRIPE_API_SECRET));
 
-// Original code from the video course:
-// interface PaymentPageProps {
-//   params: { invoiceId: string };
-//   searchParams: { status: string };
-// }
-
 export default async function PaymentPage({
   params,
 }: {
@@ -39,8 +33,7 @@ export default async function PaymentPage({
 
       // Create a URL object
       const parsedUrl = new URL(url);
-      // Get the value of the 'status' parameter
-      const status = parsedUrl.searchParams.get('status');
+      const status = parsedUrl.searchParams.get('status'); // Get the value of the 'status' parameter
 
       return {
         status,
@@ -178,12 +171,6 @@ export default async function PaymentPage({
             </strong>
             <span>{invoice.customer.name}</span>
           </li>
-          {/* <li className="flex gap-4">
-            <strong className="block w-28 flex-shrink-0 font-medium text-sm">
-              Billing Email
-            </strong>
-            <span>{invoice.customer.email}</span>
-          </li> */}
         </ul>
       </Container>
     </main>

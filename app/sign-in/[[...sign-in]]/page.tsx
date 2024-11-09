@@ -1,11 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import Image from 'next/image';
-
 import * as Clerk from '@clerk/elements/common';
 import * as SignIn from '@clerk/elements/sign-in';
+
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 
 export default function SignInPage() {
   return (
@@ -17,7 +17,7 @@ export default function SignInPage() {
         >
           <header className="text-center">
             <Image
-              src="/pngegg.png"
+              src="/invoice.png"
               alt="Invoicepedia"
               width={40}
               height={40}

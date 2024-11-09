@@ -1,22 +1,11 @@
-// import { SignUp } from '@clerk/nextjs';
-
-// import Container from '@/components/Container';
-
-// export default function SignUpPage() {
-//   return (
-//     <Container className="flex justify-center">
-//       <SignUp />
-//     </Container>
-//   );
-// }
-
 'use client';
 
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import Image from 'next/image';
 import * as Clerk from '@clerk/elements/common';
 import * as SignUp from '@clerk/elements/sign-up';
-import Image from 'next/image';
-import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
 
 export default function SignUpPage() {
   return (
@@ -28,7 +17,7 @@ export default function SignUpPage() {
         >
           <header className="text-center">
             <Image
-              src="/pngegg.png"
+              src="/invoice.png"
               alt="Invoicepedia"
               width={40}
               height={40}
@@ -63,11 +52,7 @@ export default function SignUpPage() {
               <Clerk.FieldError className="block text-sm text-red-400" />
             </Clerk.Field>
           </div>
-          <SignUp.Action
-            submit
-            asChild
-            // className="w-full rounded-md bg-zinc-950 px-3.5 py-1.5 text-center text-sm font-medium text-white shadow outline-none ring-1 ring-inset ring-zinc-950 hover:bg-zinc-800 focus-visible:outline-[1.5px] focus-visible:outline-offset-2 focus-visible:outline-zinc-950 active:text-white/70"
-          >
+          <SignUp.Action submit asChild>
             <Button className="w-full font-bold">Sign Up</Button>
           </SignUp.Action>
 

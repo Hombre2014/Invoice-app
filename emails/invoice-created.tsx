@@ -31,7 +31,7 @@ export const InvoiceCreatedEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Img
-          src={`${baseUrl}/pngegg.png`}
+          src={`${baseUrl}/invoice.png`}
           width="42"
           height="42"
           alt="Linear"
